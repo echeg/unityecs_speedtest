@@ -13,8 +13,6 @@ namespace LeopotamGroup.Ecs {
     public abstract class EcsReactSystem : IEcsPreInitSystem, IEcsRunSystem, IEcsFilterListener {
         public abstract EcsFilter GetReactFilter ();
 
-        public abstract EcsRunSystemType GetRunSystemType ();
-
         public abstract EcsReactSystemType GetReactSystemType ();
 
         public abstract void RunReact (List<int> entities);
@@ -25,10 +23,13 @@ namespace LeopotamGroup.Ecs {
 
         readonly List<int> _entities = new List<int> (512);
 
+        int _entitiesCount;
+
         public void Run () {
-            if (_entities.Count > 0) {
+            if (_entitiesCount > 0) {
                 RunReact (_entities);
                 _entities.Clear ();
+                _entitiesCount = 0;
             }
         }
 
@@ -38,28 +39,34 @@ namespace LeopotamGroup.Ecs {
                 throw new System.Exception ("Entity already in processing list.");
             }
 #endif
-            _entities.Add (entity);
+            if (_type == EcsReactSystemType.OnAdd) {
+                _entities.Add (entity);
+                _entitiesCount++;
+            }
         }
 
         void IEcsFilterListener.OnFilterEntityUpdated (int entity) {
-#if DEBUG
-            if (_entities.IndexOf (entity) != -1) {
-                throw new System.Exception ("Entity already in processing list.");
+            if (_type == EcsReactSystemType.OnUpdate && _entities.IndexOf (entity) == -1) {
+                _entities.Add (entity);
+                _entitiesCount++;
             }
-#endif
-            _entities.Add (entity);
         }
 
         void IEcsFilterListener.OnFilterEntityRemoved (int entity) {
-            _entities.Remove (entity);
+            if (_entities.Remove (entity)) {
+                _entitiesCount--;
+            }
         }
 
         void IEcsPreInitSystem.PreInitialize () {
             _reactFilter = GetReactFilter ();
-            if (GetReactSystemType () == EcsReactSystemType.OnRemove) {
+            _type = GetReactSystemType ();
+#if DEBUG
+            if (_type == EcsReactSystemType.OnRemove) {
                 throw new System.NotSupportedException (
                     "OnRemove type not supported for delayed processing, use EcsReactInstantSystem instead.");
             }
+#endif
             _reactFilter.AddListener (this);
         }
 
@@ -73,8 +80,6 @@ namespace LeopotamGroup.Ecs {
     /// </summary>
     public abstract class EcsReactInstantSystem : IEcsPreInitSystem, IEcsFilterListener {
         public abstract EcsFilter GetReactFilter ();
-
-        public abstract EcsRunSystemType GetRunSystemType ();
 
         public abstract EcsReactSystemType GetReactSystemType ();
 

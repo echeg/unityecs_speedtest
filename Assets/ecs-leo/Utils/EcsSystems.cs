@@ -5,40 +5,54 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using LeopotamGroup.Ecs.Internals;
+using System.Collections.Generic;
 
 namespace LeopotamGroup.Ecs {
+#if DEBUG
+    /// <summary>
+    /// Debug interface for systems events processing.
+    /// </summary>
+    public interface IEcsSystemsDebugListener {
+        void OnSystemsDestroyed ();
+    }
+#endif
+
     /// <summary>
     /// Logical group of systems.
     /// </summary>
     public sealed class EcsSystems {
+#if DEBUG
+        /// <summary>
+        /// Temporary disable RunUpdate / RunFixedUpdate / RunLateUpdate calls for debug reason.
+        /// </summary>
+        public bool IsRunActive = true;
+
+        /// <summary>
+        /// List of all debug listeners.
+        /// </summary>
+        readonly List<IEcsSystemsDebugListener> _debugListeners = new List<IEcsSystemsDebugListener> (4);
+#endif
+
+        /// <summary>
+        /// Ecs world instance.
+        /// </summary>
         readonly EcsWorld _world;
 
         /// <summary>
         /// Registered IEcsPreInitSystem systems.
         /// </summary>
-        readonly List<IEcsPreInitSystem> _preInitSystems = new List<IEcsPreInitSystem> (8);
+        readonly List<IEcsPreInitSystem> _preInitSystems = new List<IEcsPreInitSystem> (4);
 
         /// <summary>
         /// Registered IEcsInitSystem systems.
         /// </summary>
-        readonly List<IEcsInitSystem> _initSystems = new List<IEcsInitSystem> (16);
+        readonly List<IEcsInitSystem> _initSystems = new List<IEcsInitSystem> (8);
 
         /// <summary>
-        /// Registered IEcsRunSystem systems with EcsRunSystemType.Update.
+        /// Registered IEcsRunSystem systems.
         /// </summary>
-        readonly List<IEcsRunSystem> _runUpdateSystems = new List<IEcsRunSystem> (32);
-
-        /// <summary>
-        /// Registered IEcsRunSystem systems with EcsRunSystemType.FixedUpdate.
-        /// </summary>
-        readonly List<IEcsRunSystem> _runFixedUpdateSystems = new List<IEcsRunSystem> (16);
-
-        /// <summary>
-        /// Registered IEcsRunSystem systems with EcsRunSystemType.LateUpdate.
-        /// </summary>
-        readonly List<IEcsRunSystem> _runLateUpdateSystems = new List<IEcsRunSystem> (16);
+        readonly List<IEcsRunSystem> _runSystems = new List<IEcsRunSystem> (16);
 
 #if DEBUG
         /// <summary>
@@ -54,6 +68,60 @@ namespace LeopotamGroup.Ecs {
             }
 #endif
             _world = world;
+        }
+
+#if DEBUG
+        /// <summary>
+        /// Adds external event listener.
+        /// </summary>
+        /// <param name="observer">Event listener.</param>
+        public void AddDebugListener (IEcsSystemsDebugListener observer) {
+            if (_debugListeners.Contains (observer)) {
+                throw new Exception ("Listener already exists");
+            }
+            _debugListeners.Add (observer);
+        }
+
+        /// <summary>
+        /// Removes external event listener.
+        /// </summary>
+        /// <param name="observer">Event listener.</param>
+        public void RemoveDebugListener (IEcsSystemsDebugListener observer) {
+            _debugListeners.Remove (observer);
+        }
+#endif
+
+        /// <summary>
+        /// Gets all pre-init systems.
+        /// </summary>
+        /// <param name="list">List to put results in it.</param>
+        public void GetPreInitSystems (List<IEcsPreInitSystem> list) {
+            if (list != null) {
+                list.Clear ();
+                list.AddRange (_preInitSystems);
+            }
+        }
+
+        /// <summary>
+        /// Gets all init systems.
+        /// </summary>
+        /// <param name="list">List to put results in it.</param>
+        public void GetInitSystems (List<IEcsInitSystem> list) {
+            if (list != null) {
+                list.Clear ();
+                list.AddRange (_initSystems);
+            }
+        }
+
+        /// <summary>
+        /// Gets all run systems.
+        /// </summary>
+        /// <param name="list">List to put results in it.</param>
+        public void GetRunSystems (List<IEcsRunSystem> list) {
+            if (list != null) {
+                list.Clear ();
+                list.AddRange (_runSystems);
+            }
         }
 
         /// <summary>
@@ -80,17 +148,7 @@ namespace LeopotamGroup.Ecs {
 
             var runSystem = system as IEcsRunSystem;
             if (runSystem != null) {
-                switch (runSystem.GetRunSystemType ()) {
-                    case EcsRunSystemType.Update:
-                        _runUpdateSystems.Add (runSystem);
-                        break;
-                    case EcsRunSystemType.FixedUpdate:
-                        _runFixedUpdateSystems.Add (runSystem);
-                        break;
-                    case EcsRunSystemType.LateUpdate:
-                        _runLateUpdateSystems.Add (runSystem);
-                        break;
-                }
+                _runSystems.Add (runSystem);
             }
             return this;
         }
@@ -123,7 +181,12 @@ namespace LeopotamGroup.Ecs {
             if (!_inited) {
                 throw new Exception ("Group not initialized.");
             }
+            for (var i = _debugListeners.Count - 1; i >= 0; i--) {
+                _debugListeners[i].OnSystemsDestroyed ();
+            }
+            _debugListeners.Clear ();
 #endif
+
             for (var i = 0; i < _initSystems.Count; i++) {
                 _initSystems[i].Destroy ();
             }
@@ -132,52 +195,21 @@ namespace LeopotamGroup.Ecs {
             }
 
             _initSystems.Clear ();
-            _runUpdateSystems.Clear ();
-            _runFixedUpdateSystems.Clear ();
-            _runLateUpdateSystems.Clear ();
+            _runSystems.Clear ();
         }
 
         /// <summary>
-        /// Processes all IEcsRunSystem systems with EcsRunSystemType.Update type.
+        /// Processes all IEcsRunSystem systems.
         /// </summary>
-        public void RunUpdate () {
+        public void Run () {
 #if DEBUG
             if (!_inited) {
                 throw new Exception ("Group not initialized.");
             }
+            if (!IsRunActive) { return; }
 #endif
-            for (var i = 0; i < _runUpdateSystems.Count; i++) {
-                _runUpdateSystems[i].Run ();
-                _world.ProcessDelayedUpdates ();
-            }
-        }
-
-        /// <summary>
-        /// Processes all IEcsRunSystem systems with EcsRunSystemType.Update type.
-        /// </summary>
-        public void RunFixedUpdate () {
-#if DEBUG
-            if (!_inited) {
-                throw new Exception ("Group not initialized.");
-            }
-#endif
-            for (var i = 0; i < _runFixedUpdateSystems.Count; i++) {
-                _runFixedUpdateSystems[i].Run ();
-                _world.ProcessDelayedUpdates ();
-            }
-        }
-
-        /// <summary>
-        /// Processes all IEcsRunSystem systems with EcsRunSystemType.LateUpdate type.
-        /// </summary>
-        public void RunLateUpdate () {
-#if DEBUG
-            if (!_inited) {
-                throw new Exception ("Group not initialized.");
-            }
-#endif
-            for (var i = 0; i < _runLateUpdateSystems.Count; i++) {
-                _runLateUpdateSystems[i].Run ();
+            for (var i = 0; i < _runSystems.Count; i++) {
+                _runSystems[i].Run ();
                 _world.ProcessDelayedUpdates ();
             }
         }

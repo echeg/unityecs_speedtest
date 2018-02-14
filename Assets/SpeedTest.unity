@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b10a1c74eec5cc45b03acf6ea2de88e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Iterations: 10000
+  Iterations: 1000
   RunInUpdate: 0
 --- !u!4 &320537383
 Transform:
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 607568108}
   - component: {fileID: 607568107}
   m_Layer: 0
-  m_Name: ShmidRun
+  m_Name: SchmidRun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
