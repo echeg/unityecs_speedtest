@@ -6,12 +6,8 @@ import string
 class TestsGen():
 
     def __init__(self):
-        self.ParseInput()
+
         self.possibleComponentTypes = ["int", "long", "float"]
-
-
-    def ParseInput(self):
-
         self.components = 100
         self.systems = 200
         # self.systems - self.systemsReactive = ExecuteSystems\RunSystems
@@ -24,8 +20,6 @@ class TestsGen():
         self.componentsOnEntity = 15
 
         self.GenRandomNames = False
-        #print(args.comp)
-        #print(args.sys)
 
 
     def Run(self):
@@ -56,19 +50,19 @@ class TestsGen():
 
 
         data = self.CreateComponentsSchmid(compNames)
-        self.SaveToFile(data, "ShmidComponents.cs")
+        self.SaveToFile(data, "SchmidComponents.cs")
 
-        data = self.CreateReactSystemsShmid(compNames, sysNames, componentsGroups)
-        self.SaveToFile(data, "ShmidReactSystems.cs")
+        data = self.CreateReactSystemsSchmid(compNames, sysNames, componentsGroups)
+        self.SaveToFile(data, "SchmidReactSystems.cs")
 
-        data = self.CreateRunSystemsShmid(compNames, sysNames, componentsGroups)
-        self.SaveToFile(data, "ShmidRunSystems.cs")
+        data = self.CreateRunSystemsSchmid(compNames, sysNames, componentsGroups)
+        self.SaveToFile(data, "SchmidRunSystems.cs")
 
-        data = self.CreateShmidSystemRunner(sysNames)
-        self.SaveToFile(data, "ShmidSysRunner.cs")
+        data = self.CreateSchmidSystemRunner(sysNames)
+        self.SaveToFile(data, "SchmidSysRunner.cs")
 
-        data = self.CreateShmidEntities(componentsGroups2)
-        self.SaveToFile(data, "ShmidEntities.cs")
+        data = self.CreateSchmidEntities(componentsGroups2)
+        self.SaveToFile(data, "SchmidEntities.cs")
 
 
     def SaveToFile(self, data, filename):
@@ -166,7 +160,7 @@ class TestsGen():
             output += "} \n\n"
 
         #print (output)
-        return self.AddNamespace(output, "EcsShmid")
+        return self.AddNamespace(output, "EcsSchmid")
 
 
 # public sealed class TestReactSystem : EcsReactSystem {
@@ -323,35 +317,35 @@ class TestsGen():
         filters = random.sample(compNames, filtersCount)
         outputFilter = ""
         for i in range(filtersCount):
-            outputFilter +="GameMatcher.EcsShmid%s, " % (filters[i][:-9],)
+            outputFilter +="GameMatcher.EcsSchmid%s, " % (filters[i][:-9],)
         outputFilter = outputFilter[: -2]
 
-        outputSum = "e.ReplaceEcsShmid%s(e.ecsShmid%s.field0 + 1, 0);" % (filters[0][:-9], filters[0][:-9])
+        outputSum = "e.ReplaceEcsSchmid%s(e.ecsSchmid%s.field0 + 1, 0);" % (filters[0][:-9], filters[0][:-9])
         return outputFilter, outputSum
 
 
-    def CreateShmidMatcherFromGroup(self, filters, filtersCount):
+    def CreateSchmidMatcherFromGroup(self, filters, filtersCount):
         outputFilter = ""
         for i in range(filtersCount):
-            outputFilter +="GameMatcher.EcsShmid%s, " % (filters[i][:-9],)
+            outputFilter +="GameMatcher.EcsSchmid%s, " % (filters[i][:-9],)
 
         outputFilter = outputFilter[: -2]
         return outputFilter
 
 
-    def CreateShmidSumFromGroup(self, filters):
-        outputSum = "e.ReplaceEcsShmid%s(e.ecsShmid%s.field0 + 1, 0);" % (filters[0][:-9], filters[0][:-9])
+    def CreateSchmidSumFromGroup(self, filters):
+        outputSum = "e.ReplaceEcsSchmid%s(e.ecsSchmid%s.field0 + 1, 0);" % (filters[0][:-9], filters[0][:-9])
         return outputSum
 
 
-    def CreateRunSystemsShmid(self, compNames, sysNames, componentsGroups):
+    def CreateRunSystemsSchmid(self, compNames, sysNames, componentsGroups):
         output = "using Entitas; \n"
         output += "using System.Collections.Generic; \n"
 
         # gen execute systems
         for i in range(self.systemsReactive, self.systems):
-            outputFilter = self.CreateShmidMatcherFromGroup(componentsGroups[i], self.filterComponentsCount)
-            outputSum = self.CreateShmidSumFromGroup(componentsGroups[i])
+            outputFilter = self.CreateSchmidMatcherFromGroup(componentsGroups[i], self.filterComponentsCount)
+            outputSum = self.CreateSchmidSumFromGroup(componentsGroups[i])
 
             sysString = "public class %s : IExecuteSystem {\n" \
                         "private readonly IGroup<GameEntity> _group;\n" \
@@ -363,16 +357,16 @@ class TestsGen():
             output += sysString
 
         #print (output)
-        return self.AddNamespace(output, "EcsShmid")
+        return self.AddNamespace(output, "EcsSchmid")
 
-    def CreateReactSystemsShmid(self, compNames, sysNames, componentsGroups):
+    def CreateReactSystemsSchmid(self, compNames, sysNames, componentsGroups):
         output = "using Entitas; \n"
         output += "using System.Collections.Generic; \n"
 
         # gen reactive systems
         for i in range(self.systemsReactive):
-            outputFilter = self.CreateShmidMatcherFromGroup(componentsGroups[i], self.filterComponentsCount)
-            #outputSum = self.CreateShmidSumFromGroup(componentsGroups[i])
+            outputFilter = self.CreateSchmidMatcherFromGroup(componentsGroups[i], self.filterComponentsCount)
+            #outputSum = self.CreateSchmidSumFromGroup(componentsGroups[i])
             outputSum = "i++;\n"
 
             sysString = "public class %s : ReactiveSystem<GameEntity> {\n" \
@@ -389,7 +383,7 @@ class TestsGen():
             output += sysString
 
         #print (output)
-        return self.AddNamespace(output, "EcsShmid")
+        return self.AddNamespace(output, "EcsSchmid")
 
 
 
@@ -445,7 +439,7 @@ class TestsGen():
         return self.AddNamespace(output,"EcsLeo")
 
 
-    def CreateShmidSystemRunner(self, sysNames):
+    def CreateSchmidSystemRunner(self, sysNames):
 
         allSys = ""
         runSys = ""
@@ -459,7 +453,7 @@ class TestsGen():
 
 
         output += "using Entitas;\n"
-        output += "public class ShmidSystemCreator { \n" \
+        output += "public class SchmidSystemCreator { \n" \
                  "public static Systems CreateAllSystems(){\n" \
                  "  return new Feature(%s)\n %s" \
                  ";}\n" \
@@ -470,20 +464,20 @@ class TestsGen():
 
         output += "}\n"
 
-        return self.AddNamespace(output,"EcsShmid")
+        return self.AddNamespace(output,"EcsSchmid")
 
 
-    def CreateShmidEntities(self, componentsGroups):
+    def CreateSchmidEntities(self, componentsGroups):
        #comps = random.sample(compNames, self.compOnEntity)
 
         output = "using Entitas;\n"
-        output += "public class ShmidEntitiesCreator { \n"
+        output += "public class SchmidEntitiesCreator { \n"
         output += "public static void CreateEntitys(GameContext context){\n"
         output += "GameEntity  e;\n"
         for i in range(self.entityCount):
             output += "\n  e = context.CreateEntity();\n"
             for comp in componentsGroups[i]:
-                output += "  e.AddEcsShmid%s(1,1);\n" % (comp[:-9],)
+                output += "  e.AddEcsSchmid%s(1,1);\n" % (comp[:-9],)
                 #output += "  var c = world.AddComponent<%s>(e);\n" % (comp,)
                 #output += "  c.%s = 1;\n\n" % (self.GenFieldName(0),)
 

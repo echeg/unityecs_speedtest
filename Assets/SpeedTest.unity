@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 607568108}
   - component: {fileID: 607568107}
   m_Layer: 0
-  m_Name: ShmidRun
+  m_Name: SchmidRun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
