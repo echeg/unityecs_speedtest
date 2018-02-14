@@ -19,9 +19,16 @@ public class ShmidTestRun : MonoBehaviour
         var buttonnum = 0;
         var offset = 0;
         
-        if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Shmid"))
+        if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Shmid\n All"))
         {
-            _systems = ShmidSystemCreator.CreateSystems();
+            _systems = ShmidSystemCreator.CreateAllSystems();
+            _systems.Initialize();
+        }
+        buttonnum++;
+        
+        if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Shmid\n Only Run"))
+        {
+            _systems = ShmidSystemCreator.CreateOnlyRunSystems();
             _systems.Initialize();
         }
         buttonnum++;

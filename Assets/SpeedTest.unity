@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b10a1c74eec5cc45b03acf6ea2de88e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Iterations: 10000
+  Iterations: 1000
   RunInUpdate: 0
 --- !u!4 &320537383
 Transform:

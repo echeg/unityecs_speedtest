@@ -18,14 +18,22 @@ public class LeoTestRun : MonoBehaviour
 		var offset = 100;
 		var buttonnum = 0;
         
-		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Leo"))
+		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Leo\n All"))
 		{
 			_world = new EcsWorld();
-			_systems = LeoSystemsCreator.CreateSystems(_world);
+			_systems = LeoSystemsCreator.CreateAllSystems(_world);
 			_systems.Initialize();
 		}
 		buttonnum++;
         
+		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Leo\n Only Run"))
+		{
+			_world = new EcsWorld();
+			_systems = LeoSystemsCreator.CreateOnlyRunSystems(_world);
+			_systems.Initialize();
+		}
+		buttonnum++;
+		
 		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Add entitys"))
 		{
 			var t0 = Time.realtimeSinceStartup;
