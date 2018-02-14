@@ -44,7 +44,7 @@ public class LeoTestRun : MonoBehaviour
         
 		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Run 1"))
 		{
-			_systems.RunUpdate();
+			_systems.Run();
 		}
 		buttonnum++;
 
@@ -53,9 +53,9 @@ public class LeoTestRun : MonoBehaviour
 			var t0 = Time.realtimeSinceStartup;
 			for (int i = 0; i < Iterations; i++)
 			{
-				_systems.RunUpdate();
+				_systems.Run();
 			}
-			Debug.Log("Run Iterations " + (Time.realtimeSinceStartup - t0));
+			Debug.Log("Run Iterations_"+Iterations+" time " + (Time.realtimeSinceStartup - t0));
 		}
 		buttonnum++;
 	}
@@ -63,6 +63,6 @@ public class LeoTestRun : MonoBehaviour
 	void Update()
 	{
 		if (!RunInUpdate) return;
-		_systems.RunUpdate();
+		_systems.Run();
 	}
 }

@@ -255,10 +255,9 @@ class TestsGen():
                         "  EcsWorld _world; \n\n" \
                         "  %s\n" \
                         "  EcsFilter _filter; \n" \
-                        "  EcsRunSystemType IEcsRunSystem.GetRunSystemType () {return EcsRunSystemType.Update;}\n" \
                         "  void IEcsRunSystem.Run () {\n" \
                         "    foreach (var entity in _filter.Entities) {\n" \
-                        "%s\n" \
+                        "%s" \
                         "}\n" \
                         "}}\n" % (sysNames[i], outputFilter, outputSum)
 
@@ -284,9 +283,8 @@ class TestsGen():
                          "  EcsWorld _world; \n\n" \
                          "  %s\n" \
                          "  EcsFilter _filter; \n" \
-                         "  public override EcsFilter GetReactFilter () {return _filter;} \n" \
+                         "  public override EcsFilter GetReactFilter () {return _filter;} \n\n" \
                          "  public override EcsReactSystemType GetReactSystemType () {return EcsReactSystemType.OnUpdate;} \n" \
-                         "  public override EcsRunSystemType GetRunSystemType () {return EcsRunSystemType.Update;} \n" \
                          "  public override void RunReact (List<int> entities) { \n" \
                          "       var i = 0;\n" \
                          "      foreach (var entity in entities) { \n" \

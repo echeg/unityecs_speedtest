@@ -54,7 +54,7 @@ public class ShmidTestRun : MonoBehaviour
             {
                 _systems.Execute();
             }
-            Debug.Log("Run Iterations " + (Time.realtimeSinceStartup - t0));
+            Debug.Log("Run Iterations_"+Iterations+" time " + (Time.realtimeSinceStartup - t0));
         }
         buttonnum++;
     }
