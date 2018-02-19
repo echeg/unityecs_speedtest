@@ -11,20 +11,25 @@ Default test data 100 components, 150 react systems, 50 execute systems, 15 comp
 
 ### Results
 
-Samsung Note4 - .net 3.5 - mono   
-Leo  
-Add 1000 entitys 1.189178  
-Add 1000 entitys 0.1388092  
-Run Iterations_1000 time 3.334839  
-Run Iterations_1000 time 2.94664  
-Run Iterations_1000 time 2.984146  
+Samsung Note4 - .net 4.6 - mono   
+Init Leo All Sys 0.3292427
+Register Components Creators time 0.05782318
+Add Leo entitys 1.627518
+Add Leo entitys 0.04668808
+Add Leo entitys 0.05204391
+Run Leo Single Run time 1.292656
+Run Leo Iterations_1000 time 0.8216705
+Run Leo Iterations_1000 time 0.7718582
+Run Leo Iterations_1000 time 0.7668533
 
-sschmid  
-Add 1000 entitys 0.9322052  
-Add 1000 entitys 0.2367249  
-Run Iterations_1000 time 1.015213  
-Run Iterations_1000 time 0.9170227  
-Run Iterations_1000 time 0.9141693  
+Init Schmid All Sys 0.4264908
+Add Schmid entitys 1.385193
+Add Schmid entitys 0.207962
+Add Schmid entitys 0.1805954
+Run Schmid Single Run time 0.2443848
+Run Schmid Iterations_1000 time 0.9331589
+Run Schmid Iterations_1000 time 0.9488602
+Run Schmid Iterations_1000 time 0.9467239
 
 
 ### Gen New Test Data
