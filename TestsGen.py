@@ -36,6 +36,9 @@ class TestsGen():
         data = self.CreateComponentsLeo(compNames)
         self.SaveToFile(data,"LeoComponents.cs")
 
+        data = self.CreateLeoComponentsRegister(compNames)
+        self.SaveToFile(data,"LeoComponentRegCreators.cs")
+
         data = self.CreateReactSystemsLeo(compNames, sysNames, componentsGroups)
         self.SaveToFile(data, "LeoReactSystems.cs")
 
@@ -194,6 +197,18 @@ class TestsGen():
 #         }
 #     }
 # }
+
+    def CreateLeoComponentsRegister(self, compNames):
+        output = ""
+        output += "using LeopotamGroup.Ecs;\n"
+        output += "public class LeoComponentRegCreators {\n"
+        output += "public static void RegisterComponentCreators(){\n"
+        for comp in compNames:
+            output += "EcsWorld.RegisterComponentCreator<%s> (() => new %s());\n" % (comp, comp)
+
+        output += "}}\n"
+        return self.AddNamespace(output, "EcsLeo")
+
 
     def GenerateLeoFilter(self, compNames, filtersCount):
         outputFilter = "[EcsFilterInclude("

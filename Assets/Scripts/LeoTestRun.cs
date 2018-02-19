@@ -64,6 +64,14 @@ public class LeoTestRun : MonoBehaviour
 			Debug.Log("Run Leo Iterations_"+Iterations+" time " + (Time.realtimeSinceStartup - t0));
 		}
 		buttonnum++;
+		
+		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Register Components\n Creation"))
+		{
+			var t0 = Time.realtimeSinceStartup;
+			LeoComponentRegCreators.RegisterComponentCreators();
+			Debug.Log("Register Components Creators time " + (Time.realtimeSinceStartup - t0));
+		}
+		buttonnum++;		
 	}
 	
 	void Update()
