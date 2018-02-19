@@ -5,6 +5,7 @@
 // ----------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using LeopotamGroup.Ecs.Internals;
 
 namespace LeopotamGroup.Ecs {
     /// <summary>
@@ -21,39 +22,46 @@ namespace LeopotamGroup.Ecs {
 
         EcsReactSystemType _type;
 
-        readonly List<int> _entities = new List<int> (512);
+        readonly List<int> _entities = new List<int> (64);
 
         int _entitiesCount;
+
+        readonly EcsEntityHashSet _entityHashes = new EcsEntityHashSet ();
 
         public void Run () {
             if (_entitiesCount > 0) {
                 RunReact (_entities);
                 _entities.Clear ();
+                _entityHashes.Clear ();
                 _entitiesCount = 0;
             }
         }
 
         void IEcsFilterListener.OnFilterEntityAdded (int entity) {
 #if DEBUG
-            if (_entities.IndexOf (entity) != -1) {
+            if (_entityHashes.Contains (entity)) {
                 throw new System.Exception ("Entity already in processing list.");
             }
 #endif
             if (_type == EcsReactSystemType.OnAdd) {
                 _entities.Add (entity);
+                _entityHashes.Add (entity);
                 _entitiesCount++;
             }
         }
 
         void IEcsFilterListener.OnFilterEntityUpdated (int entity) {
-            if (_type == EcsReactSystemType.OnUpdate && _entities.IndexOf (entity) == -1) {
-                _entities.Add (entity);
-                _entitiesCount++;
+            if (_type == EcsReactSystemType.OnUpdate) {
+                if (_entityHashes.Add (entity)) {
+                    _entities.Add (entity);
+                    _entitiesCount++;
+                }
             }
         }
 
         void IEcsFilterListener.OnFilterEntityRemoved (int entity) {
-            if (_entities.Remove (entity)) {
+            if (_entityHashes.Remove (entity)) {
+                _entities.Remove (entity);
                 _entitiesCount--;
             }
         }

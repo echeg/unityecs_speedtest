@@ -8,10 +8,9 @@ using System;
 
 namespace LeopotamGroup.Ecs.Internals {
     interface IEcsComponentPool {
-        object GetItem (int idx);
-        void RecycleIndex (int id);
-        int GetComponentIndex ();
-        void ConnectToWorld (EcsWorld world, int index);
+        object Get (int idx);
+        void Recycle (int id);
+        int GetComponentTypeIndex ();
     }
 
     /// <summary>
@@ -20,13 +19,11 @@ namespace LeopotamGroup.Ecs.Internals {
     sealed class EcsComponentPool<T> : IEcsComponentPool where T : class, new () {
         public static readonly EcsComponentPool<T> Instance = new EcsComponentPool<T> ();
 
-        const int MinSize = 8;
-
         public T[] Items = new T[MinSize];
 
-        public int TypeIndex = -1;
+        const int MinSize = 8;
 
-        public EcsWorld World;
+        int _typeIndex;
 
         int[] _reservedItems = new int[MinSize];
 
@@ -36,6 +33,10 @@ namespace LeopotamGroup.Ecs.Internals {
 
         Func<T> _creator;
 
+        EcsComponentPool () {
+            _typeIndex = EcsHelpers.ComponentsCount++;
+        }
+
         public int GetIndex () {
             int id;
             if (_reservedItemsCount > 0) {
@@ -44,7 +45,7 @@ namespace LeopotamGroup.Ecs.Internals {
                 id = _itemsCount;
                 if (_itemsCount == Items.Length) {
                     var newItems = new T[_itemsCount << 1];
-                    Array.Copy (Items, newItems, _itemsCount);
+                    Array.Copy (Items, 0, newItems, 0, _itemsCount);
                     Items = newItems;
                 }
                 Items[_itemsCount++] = _creator != null ? _creator () : (T) Activator.CreateInstance (typeof (T));
@@ -52,38 +53,21 @@ namespace LeopotamGroup.Ecs.Internals {
             return id;
         }
 
-        public void RecycleIndex (int id) {
+        public void Recycle (int id) {
             if (_reservedItemsCount == _reservedItems.Length) {
                 var newItems = new int[_reservedItemsCount << 1];
-                Array.Copy (_reservedItems, newItems, _reservedItemsCount);
+                Array.Copy (_reservedItems, 0, newItems, 0, _reservedItemsCount);
                 _reservedItems = newItems;
             }
             _reservedItems[_reservedItemsCount++] = id;
         }
 
-        object IEcsComponentPool.GetItem (int idx) {
+        object IEcsComponentPool.Get (int idx) {
             return Items[idx];
         }
 
-        int IEcsComponentPool.GetComponentIndex () {
-            return TypeIndex;
-        }
-
-        public void ConnectToWorld (EcsWorld world, int index) {
-#if DEBUG
-            if (world != null && World != null) {
-                throw new Exception ("Already connected to another world.");
-            }
-#endif
-            World = world;
-            TypeIndex = index;
-            if (World == null) {
-                Items = new T[MinSize];
-                _reservedItems = new int[MinSize];
-                _itemsCount = 0;
-                _reservedItemsCount = 0;
-                _creator = null;
-            }
+        public int GetComponentTypeIndex () {
+            return _typeIndex;
         }
 
         public void SetCreator (Func<T> creator) {
@@ -91,29 +75,16 @@ namespace LeopotamGroup.Ecs.Internals {
         }
 
         public void Shrink () {
-            var newSize = GetPoolSize (_itemsCount);
+            var newSize = EcsHelpers.GetPowerOfTwoSize (_itemsCount < MinSize ? MinSize : _itemsCount);
             if (newSize < Items.Length) {
                 var newItems = new T[newSize];
-                Array.Copy (Items, newItems, _itemsCount);
+                Array.Copy (Items, 0, newItems, 0, _itemsCount);
                 Items = newItems;
             }
             if (_reservedItems.Length > MinSize) {
                 _reservedItems = new int[MinSize];
                 _reservedItemsCount = 0;
             }
-        }
-
-        int GetPoolSize (int n) {
-            if (n < MinSize) {
-                return MinSize;
-            }
-            n--;
-            n = n | (n >> 1);
-            n = n | (n >> 2);
-            n = n | (n >> 4);
-            n = n | (n >> 8);
-            n = n | (n >> 16);
-            return n + 1;
         }
     }
 }

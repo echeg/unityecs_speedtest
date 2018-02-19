@@ -7,10 +7,6 @@ Performance and zero memory allocation / no gc work / small size - main goals of
 
 > Tested / developed on unity 2017.3 and contains assembly definition for compiling to separate assembly file for performance reason.
 
-> Components limit - 256 **different** components at each world (256 C# classes), can be changed with preprocessor defines: `ECS_COMPONENT_LIMIT_512`, `ECS_COMPONENT_LIMIT_1024` or `ECS_COMPONENT_LIMIT_2048`.
-
-> Components limit on each entity: up to component limit at ecs-world, but better to keep it less or equal 6 for performance reason.
-
 # Main parts of ecs
 
 ## Component
@@ -296,8 +292,24 @@ class Startup : Monobehaviour {
 }
 ```
 
-# Limitations
-## I want to create alot of new entities with new components on start, how to speed up this process?
+# Examples
+[Snake game](https://github.com/Leopotam/ecs-snake)
+
+# Extensions
+[UnityEditor integration](https://github.com/Leopotam/ecs-unityintegration)
+
+[uGui event bindings](https://github.com/Leopotam/ecs-ui)
+
+# License
+The software released under the terms of the MIT license. Enjoy.
+
+# FAQ
+
+### My project complex enough, I need more than 256 components. How I can do it?
+
+There are no components limit, but for performance / memory usage reason better to keep amount of components on each entity less or equals 8.
+
+### I want to create alot of new entities with new components on start, how to speed up this process?
 
 In this case custom component creator can be used (for speed up 2x or more):
 
@@ -309,7 +321,8 @@ class Startup : Monobehaviour {
 
     void OnEnable() {
         var world = new MyWorld (_sharedData);
-        world.RegisterComponentCreator<MyComponent> (() => new MyComponent());
+        
+        EcsWorld.RegisterComponentCreator<MyComponent> (() => new MyComponent());
         
         _systems = new EcsSystems(world)
             .Add (MySystem());
@@ -317,9 +330,8 @@ class Startup : Monobehaviour {
     }
 }
 ```
-Reference to custom creator will be reset on `world.Destroy` call.
 
-## I want to process one system at `MonoBehaviour.Update` and another - at `MonoBehaviour.FixedUpdate`. How I can do it?
+### I want to process one system at `MonoBehaviour.Update` and another - at `MonoBehaviour.FixedUpdate`. How I can do it?
 
 For splitting systems by `MonoBehaviour`-method multiple `EcsSystems` logical groups should be used:
 ```
@@ -341,13 +353,6 @@ void FixedUpdate() {
 }
 ```
 
-# Examples
-[Snake game](https://github.com/Leopotam/ecs-snake)
+### How it fast relative to Entitas?
 
-# Extensions
-[UnityEditor integration](https://github.com/Leopotam/ecs-unityintegration)
-
-[uGui event bindings](https://github.com/Leopotam/ecs-ui)
-
-# License
-The software released under the terms of the MIT license. Enjoy.
+Some test can be found at [this repo](https://github.com/echeg/unityecs_speedtest). Tests can be obsoleted, better to grab last versions of frameworks and check locally.

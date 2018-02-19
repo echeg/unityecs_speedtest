@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using LeopotamGroup.Ecs.Internals;
 
 namespace LeopotamGroup.Ecs {
     /// <summary>
@@ -37,7 +38,7 @@ namespace LeopotamGroup.Ecs {
         /// List of filtered entities.
         /// Do not change it manually!
         /// </summary>
-        public readonly List<int> Entities = new List<int> (512);
+        public readonly List<int> Entities = new List<int> (64);
 
         IEcsFilterListener[] _listeners = new IEcsFilterListener[4];
 
@@ -61,7 +62,7 @@ namespace LeopotamGroup.Ecs {
 #endif
             if (_listenersCount == _listeners.Length) {
                 var newListeners = new IEcsFilterListener[_listenersCount << 1];
-                Array.Copy (_listeners, newListeners, _listenersCount);
+                Array.Copy (_listeners, 0, newListeners, 0, _listenersCount);
                 _listeners = newListeners;
             }
             _listeners[_listenersCount++] = listener;
