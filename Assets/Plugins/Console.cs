@@ -79,7 +79,7 @@ namespace Consolation
         static readonly GUIContent collapseLabel = new GUIContent("Collapse", "Hide repeated messages.");
 
         readonly Rect titleBarRect = new Rect(0, 0, 10000, 20);
-        Rect windowRect = new Rect(margin, margin, Screen.width - (margin * 2), Screen.height - (margin * 2));
+        Rect windowRect = new Rect(margin, Screen.height/2, Screen.width - (margin * 2), Screen.height/2 - (margin * 2));
 
         void OnEnable ()
         {
