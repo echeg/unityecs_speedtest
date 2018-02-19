@@ -20,19 +20,21 @@ public class LeoTestRun : MonoBehaviour
         
 		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Leo\n All Sys"))
 		{
+			var t0 = Time.realtimeSinceStartup;
 			_world = new EcsWorld();
 			_systems = LeoSystemsCreator.CreateAllSystems(_world);
 			_systems.Initialize();
-			Debug.Log("Init Leo All Sys");
+			Debug.Log("Init Leo All Sys " + (Time.realtimeSinceStartup - t0));
 		}
 		buttonnum++;
         
 		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Leo\n Only Run Sys"))
 		{
+			var t0 = Time.realtimeSinceStartup;
 			_world = new EcsWorld();
 			_systems = LeoSystemsCreator.CreateOnlyRunSystems(_world);
 			_systems.Initialize();
-			Debug.Log("Init Leo Only Run Sys");
+			Debug.Log("Init Leo Only Run Sys " + (Time.realtimeSinceStartup - t0));
 		}
 		buttonnum++;
 		
@@ -46,7 +48,9 @@ public class LeoTestRun : MonoBehaviour
         
 		if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Run 1"))
 		{
+			var t0 = Time.realtimeSinceStartup;
 			_systems.Run();
+			Debug.Log("Run Leo Single Run time " + (Time.realtimeSinceStartup - t0));
 		}
 		buttonnum++;
 

@@ -21,17 +21,19 @@ public class SchmidTestRun : MonoBehaviour
         
         if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Shmid\n All Sys"))
         {
+            var t0 = Time.realtimeSinceStartup;
             _systems = SchmidSystemCreator.CreateAllSystems();
             _systems.Initialize();
-            Debug.Log("Init Schmid All Sys");
+            Debug.Log("Init Schmid All Sys " + (Time.realtimeSinceStartup - t0));
         }
         buttonnum++;
         
         if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Init Shmid\n Only Run Sys"))
         {
+            var t0 = Time.realtimeSinceStartup;
             _systems = SchmidSystemCreator.CreateOnlyRunSystems();
             _systems.Initialize();
-            Debug.Log("Init Schmid Only Run Sys");
+            Debug.Log("Init Schmid Only Run Sys " + (Time.realtimeSinceStartup - t0));
         }
         buttonnum++;
         
@@ -43,9 +45,12 @@ public class SchmidTestRun : MonoBehaviour
         }
         buttonnum++;
         
+        // for test creation cashes time
         if (GUI.Button(new Rect(offset, buttonnum*size, size, size), "Run 1"))
         {
+            var t0 = Time.realtimeSinceStartup;
             _systems.Execute();
+            Debug.Log("Run Schmid Single Run time " + (Time.realtimeSinceStartup - t0));
         }
         buttonnum++;
 
