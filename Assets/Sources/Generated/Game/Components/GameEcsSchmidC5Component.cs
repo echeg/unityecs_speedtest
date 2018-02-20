@@ -11,7 +11,7 @@ public partial class GameEntity {
     public EcsSchmid.C5Component ecsSchmidC5 { get { return (EcsSchmid.C5Component)GetComponent(GameComponentsLookup.EcsSchmidC5); } }
     public bool hasEcsSchmidC5 { get { return HasComponent(GameComponentsLookup.EcsSchmidC5); } }
 
-    public void AddEcsSchmidC5(float newField0, long newField1) {
+    public void AddEcsSchmidC5(int newField0, float newField1) {
         var index = GameComponentsLookup.EcsSchmidC5;
         var component = CreateComponent<EcsSchmid.C5Component>(index);
         component.field0 = newField0;
@@ -19,7 +19,7 @@ public partial class GameEntity {
         AddComponent(index, component);
     }
 
-    public void ReplaceEcsSchmidC5(float newField0, long newField1) {
+    public void ReplaceEcsSchmidC5(int newField0, float newField1) {
         var index = GameComponentsLookup.EcsSchmidC5;
         var component = CreateComponent<EcsSchmid.C5Component>(index);
         component.field0 = newField0;
