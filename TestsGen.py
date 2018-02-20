@@ -8,16 +8,16 @@ class TestsGen():
     def __init__(self):
 
         self.possibleComponentTypes = ["int", "long", "float"]
-        self.components = 100
-        self.systems = 200
+        self.components = 500
+        self.systems = 1000
         # self.systems - self.systemsReactive = ExecuteSystems\RunSystems
-        self.systemsReactive = 150
+        self.systemsReactive = 750
 
         self.fieldsInComponent = 2
-        self.dir = "output"
+        self.dir = "output/Big"
         self.filterComponentsCount = 3
         self.entityCount = 1000
-        self.componentsOnEntity = 15
+        self.componentsOnEntity = 10
 
         self.GenRandomNames = False
 
