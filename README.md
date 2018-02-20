@@ -147,5 +147,6 @@ Samsung Note 4 Big Test
 02-20 12:34:49.644: I/Unity(3444): Run Leo Iterations_1000 time 0.1500702  
 02-20 12:34:50.459: I/Unity(3444): Run Leo Iterations_1000 time 0.1484222  
 02-20 12:34:51.594: I/Unity(3444): Add Leo entitys 0.02641296  
-02-20 12:34:53.719: I/Unity(3444): Run Leo Iterations_1000 time 1.124153  
-  
+02-20 12:34:53.719: I/Unity(3444): Run Leo Iterations_1000 time 1.1241531  
+02-20 12:34:55.124: I/Unity(3444): Run Leo Iterations_1000 time 0.1544562  
+02-20 12:34:57.513: I/Unity(3444): Run Leo Iterations_1000 time 0.1601868
