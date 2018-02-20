@@ -88,3 +88,64 @@ Run Leo Iterations_1000 time 2.765144
 Run Leo Iterations_1000 time 2.551315  
 Run Leo Iterations_1000 time 2.623993  
 
+## Big Test 
+self.components = 500  
+self.systems = 1000  
+self.systemsReactive = 750  
+self.fieldsInComponent = 2  
+self.dir = "output/Big"  
+self.filterComponentsCount = 3  
+self.entityCount = 1000  
+self.componentsOnEntity = 10  
+
+Sony Z2 Big Test  
+
+02-20 12:31:36.139: I/Unity(15339): Init Schmid All Sys 2.120574  
+02-20 12:31:39.248: I/Unity(15339): Add Schmid entitys 1.544062  
+02-20 12:31:40.431: I/Unity(15339): Add Schmid entitys 0.2277784  
+02-20 12:31:41.411: I/Unity(15339): Add Schmid entitys 0.2135553  
+02-20 12:31:42.564: I/Unity(15339): Run Schmid Single Run time 0.2120438  
+02-20 12:31:43.957: I/Unity(15339): Run Schmid Iterations_1000 time 0.1561174  
+02-20 12:31:44.685: I/Unity(15339): Run Schmid Iterations_1000 time 0.1367321  
+02-20 12:31:45.460: I/Unity(15339): Run Schmid Iterations_1000 time 0.1492729  
+02-20 12:31:46.614: I/Unity(15339): Add Schmid entitys 0.2705612  
+02-20 12:31:47.491: I/Unity(15339): Run Schmid Iterations_1000 time 0.1460304  
+
+
+02-20 12:31:50.410: I/Unity(15339): Init Leo All Sys 1.696819  
+02-20 12:31:53.466: I/Unity(15339): Register Components Creators time 0.3021317  
+02-20 12:31:57.744: I/Unity(15339): Add Leo entitys 2.03124  
+02-20 12:31:58.692: I/Unity(15339): Add Leo entitys 0.03621101  
+02-20 12:31:59.751: I/Unity(15339): Add Leo entitys 0.03777313  
+02-20 12:32:07.911: I/Unity(15339): Run Leo Single Run time 6.545662  
+02-20 12:32:09.188: I/Unity(15339): Run Leo Iterations_1000 time 0.222374  
+02-20 12:32:10.046: I/Unity(15339): Run Leo Iterations_1000 time 0.1483765  
+02-20 12:32:10.864: I/Unity(15339): Run Leo Iterations_1000 time 0.1639252  
+02-20 12:32:24.873: I/Unity(15339): Add Leo entitys 0.03464127  
+02-20 12:32:28.141: I/Unity(15339): Run Leo Iterations_1000 time 2.089664  
+
+Samsung Note 4 Big Test
+
+02-20 12:34:20.229: I/Unity(3444): Init Schmid All Sys 1.70809  
+02-20 12:34:24.884: I/Unity(3444): Add Schmid entitys 1.414608  
+02-20 12:34:25.704: I/Unity(3444): Add Schmid entitys 0.1465473  
+02-20 12:34:26.524: I/Unity(3444): Add Schmid entitys 0.1306496  
+02-20 12:34:27.594: I/Unity(3444): Run Schmid Single Run time 0.1625137  
+02-20 12:34:28.534: I/Unity(3444): Run Schmid Iterations_1000 time 0.1292324  
+02-20 12:34:29.354: I/Unity(3444): Run Schmid Iterations_1000 time 0.1142139  
+02-20 12:34:30.144: I/Unity(3444): Run Schmid Iterations_1000 time 0.1136036  
+02-20 12:34:31.314: I/Unity(3444): Add Schmid entitys 0.1330109  
+02-20 12:34:32.279: I/Unity(3444): Run Schmid Iterations_1000 time 0.1275177  
+
+02-20 12:34:35.009: I/Unity(3444): Init Leo All Sys 1.433708  
+02-20 12:34:36.234: I/Unity(3444): Register Components Creators time 0.2168274  
+02-20 12:34:40.599: I/Unity(3444): Add Leo entitys 1.55175  
+02-20 12:34:41.294: I/Unity(3444): Add Leo entitys 0.02160263  
+02-20 12:34:42.144: I/Unity(3444): Add Leo entitys 0.03143311  
+02-20 12:34:47.889: I/Unity(3444): Run Leo Single Run time 3.481533  
+02-20 12:34:48.834: I/Unity(3444): Run Leo Iterations_1000 time 0.1619034  
+02-20 12:34:49.644: I/Unity(3444): Run Leo Iterations_1000 time 0.1500702  
+02-20 12:34:50.459: I/Unity(3444): Run Leo Iterations_1000 time 0.1484222  
+02-20 12:34:51.594: I/Unity(3444): Add Leo entitys 0.02641296  
+02-20 12:34:53.719: I/Unity(3444): Run Leo Iterations_1000 time 1.124153  
+  
