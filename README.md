@@ -68,14 +68,14 @@ Run Schmid Iterations_1000 time 1.121704
 
 Nexus 7 2013 - .net 4.6 - mono  
 
-Init Schmid All Sys 0.9919453
-Add Schmid entitys 5.318306
-Add Schmid entitys 0.3611946
-Add Schmid entitys 0.3336716
-Run Schmid Single Run time 0.5344353
-Run Schmid Iterations_1000 time 2.477386
-Run Schmid Iterations_1000 time 2.275867
-Run Schmid Iterations_1000 time 2.476757
+Init Schmid All Sys 0.9919453  
+Add Schmid entitys 5.318306  
+Add Schmid entitys 0.3611946  
+Add Schmid entitys 0.3336716  
+Run Schmid Single Run time 0.5344353  
+Run Schmid Iterations_1000 time 2.477386  
+Run Schmid Iterations_1000 time 2.275867  
+Run Schmid Iterations_1000 time 2.476757  
 
 Init Leo All Sys 0.9149895  
 Register Components Creators time 0.1374359  
