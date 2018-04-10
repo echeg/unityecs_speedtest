@@ -26,15 +26,15 @@ For sschmid/Entitas-CSharp you need regenerate code by Roslyn or
 
 Samsung Note4 - .net 4.6 - mono 
 
-Init Leo All Sys 0.3292427  
-Register Components Creators time 0.05782318  
-Add Leo entitys 1.627518  
-Add Leo entitys 0.04668808  
-Add Leo entitys 0.05204391  
-Run Leo Single Run time 1.292656  
-Run Leo Iterations_1000 time 0.8216705  
-Run Leo Iterations_1000 time 0.7718582  
-Run Leo Iterations_1000 time 0.7668533  
+Init Leo All Sys 0.3737669
+Register Components Creators time 0.05035305
+Add Leo entitys 1.882744
+Add Leo entitys 0.04458618
+Add Leo entitys 0.02714348
+Run Leo Single Run time 1.508322
+Run Leo Iterations_1000 time 0.7965965
+Run Leo Iterations_1000 time 1.028347
+Run Leo Iterations_1000 time 0.7501526
 
 Init Schmid All Sys 0.4264908  
 Add Schmid entitys 1.385193  
@@ -47,15 +47,15 @@ Run Schmid Iterations_1000 time 0.9467239
 
 Sony Z2 - .net 4.6 - mono  
 
-Init Leo All Sys 0.3697891  
-Add Leo entitys 2.928162  
-Register Components Creators time 0.08101654  
-Add Leo entitys 0.09676743  
-Add Leo entitys 0.07318878  
-Run Leo Single Run time 2.367935  
-Run Leo Iterations_1000 time 1.282661  
-Run Leo Iterations_1000 time 1.190426  
-Run Leo Iterations_1000 time 1.125175  
+Init Leo All Sys 0.3652186  
+Register Components Creators time 0.07050753
+dd Leo entitys 2.214939
+Add Leo entitys 0.05776405
+dd Leo entitys 0.03968811
+Run Leo Single Run time 2.483866
+Run Leo Iterations_1000 time 1.160664
+Run Leo Iterations_1000 time 1.092527
+Run Leo Iterations_1000 time 1.124329
 
 Init Schmid All Sys 0.5503559  
 Add Schmid entitys 2.360914  
@@ -66,25 +66,5 @@ Run Schmid Iterations_1000 time 1.163706
 Run Schmid Iterations_1000 time 1.165791  
 Run Schmid Iterations_1000 time 1.121704  
 
-Nexus 7 2013 - .net 4.6 - mono  
 
-Init Schmid All Sys 0.9919453  
-Add Schmid entitys 5.318306  
-Add Schmid entitys 0.3611946  
-Add Schmid entitys 0.3336716  
-Run Schmid Single Run time 0.5344353  
-Run Schmid Iterations_1000 time 2.477386  
-Run Schmid Iterations_1000 time 2.275867  
-Run Schmid Iterations_1000 time 2.476757  
-
-Init Leo All Sys 0.9149895  
-Register Components Creators time 0.1374359  
-Add Leo entitys 4.183792  
-Add Leo entitys 0.09326172  
-Add Leo entitys 0.1141663  
-Run Leo Single Run time 4.31012  
-Run Leo Iterations_1000 time 3.024178  
-Run Leo Iterations_1000 time 2.765144  
-Run Leo Iterations_1000 time 2.551315  
-Run Leo Iterations_1000 time 2.623993  
 
