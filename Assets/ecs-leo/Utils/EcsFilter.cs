@@ -5,7 +5,6 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using LeopotamGroup.Ecs.Internals;
 
 namespace LeopotamGroup.Ecs {
@@ -13,9 +12,9 @@ namespace LeopotamGroup.Ecs {
     /// Basic interface for filter events processing.
     /// </summary>
     public interface IEcsFilterListener {
-        void OnFilterEntityAdded (int entity);
-        void OnFilterEntityRemoved (int entity);
-        void OnFilterEntityUpdated (int entity);
+        void OnFilterEntityAdded (int entity, object reason);
+        void OnFilterEntityRemoved (int entity, object reason);
+        void OnFilterEntityUpdated (int entity, object reason);
     }
 
     /// <summary>
@@ -35,10 +34,17 @@ namespace LeopotamGroup.Ecs {
         internal readonly EcsComponentMask ExcludeMask;
 
         /// <summary>
-        /// List of filtered entities.
+        /// Storage of filtered entities.
+        /// Important: Length of this storage can be larger than real amount of items,
+        /// use EntitiesCount instead of Entities.Length!
         /// Do not change it manually!
         /// </summary>
-        public readonly List<int> Entities = new List<int> (64);
+        public int[] Entities = new int[32];
+
+        /// <summary>
+        /// Amount of filtered entities.
+        /// </summary>
+        public int EntitiesCount;
 
         IEcsFilterListener[] _listeners = new IEcsFilterListener[4];
 
@@ -61,9 +67,7 @@ namespace LeopotamGroup.Ecs {
             }
 #endif
             if (_listenersCount == _listeners.Length) {
-                var newListeners = new IEcsFilterListener[_listenersCount << 1];
-                Array.Copy (_listeners, 0, newListeners, 0, _listenersCount);
-                _listeners = newListeners;
+                Array.Resize (ref _listeners, _listenersCount << 1);
             }
             _listeners[_listenersCount++] = listener;
         }
@@ -87,27 +91,41 @@ namespace LeopotamGroup.Ecs {
 #if NET_4_6
         [System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        internal void RaiseOnEntityAdded (int entity) {
+        internal void RaiseOnAddEvent (int entity, object reason) {
+            if (Entities.Length == EntitiesCount) {
+                Array.Resize (ref Entities, EntitiesCount << 1);
+            }
+            Entities[EntitiesCount++] = entity;
             for (var i = 0; i < _listenersCount; i++) {
-                _listeners[i].OnFilterEntityAdded (entity);
+                _listeners[i].OnFilterEntityAdded (entity, reason);
             }
         }
 
 #if NET_4_6
         [System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        internal void RaiseOnEntityRemoved (int entity) {
-            for (var i = 0; i < _listenersCount; i++) {
-                _listeners[i].OnFilterEntityRemoved (entity);
+        internal void RaiseOnRemoveEvent (int entity, object reason) {
+            var i = EntitiesCount - 1;
+            for (; i >= 0; i--) {
+                if (Entities[i] == entity) {
+                    break;
+                }
+            }
+            if (i != -1) {
+                EntitiesCount--;
+                Array.Copy (Entities, i + 1, Entities, i, EntitiesCount - i);
+            }
+            for (i = 0; i < _listenersCount; i++) {
+                _listeners[i].OnFilterEntityRemoved (entity, reason);
             }
         }
 
 #if NET_4_6
         [System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        internal void RaiseOnEntityUpdated (int entity) {
+        internal void RaiseOnUpdateEvent (int entity, object reason) {
             for (var i = 0; i < _listenersCount; i++) {
-                _listeners[i].OnFilterEntityUpdated (entity);
+                _listeners[i].OnFilterEntityUpdated (entity, reason);
             }
         }
 

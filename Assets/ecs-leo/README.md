@@ -1,11 +1,9 @@
 [![gitter](https://img.shields.io/gitter/room/leopotam/ecs.svg)](https://gitter.im/leopotam/ecs)
 [![license](https://img.shields.io/github/license/Leopotam/ecs.svg)](https://github.com/Leopotam/ecs/blob/develop/LICENSE)
 # Another one Entity Component System framework
-Performance and zero memory allocation / no gc work / small size - main goals of this project.
+Performance and zero memory allocation / no gc pressure / small size, no dependencies on any game engine - main goals of this project.
 
-> **This software in work-in-progress stage, api mostly stable.**
-
-> Tested / developed on unity 2017.3 and contains assembly definition for compiling to separate assembly file for performance reason.
+> Tested on unity 2017.4 (not dependent on it) and contains assembly definition for compiling to separate assembly file for performance reason.
 
 # Main parts of ecs
 
@@ -91,13 +89,16 @@ class WeaponSystem : IEcsInitSystem, IEcsRunSystem {
     void IEcsInitSystem.Destroy () { }
 
     void IEcsRunSystem.Run () {
-        foreach (var entity in _filter.Entities) {
+        // Important: foreach-loop cant be used for filtered entities!
+        for (var i = 0; i < _filter.EntitiesCount; i++) {
+            var entity = _filter.Entities[i];
             var weapon = _world.GetComponent<WeaponComponent> (entity);
             weapon.Ammo = System.Math.Max (0, weapon.Ammo - 1);
         }
     }
 }
 ```
+> Important: filter.Entities cant be iterated with foreach-loop, for-loop should be used instead with filter.EntitiesCount value as upper-bound.
 
 ## EcsWorld
 Root level container for all entities / components, works like isolated environment.
@@ -154,8 +155,9 @@ public sealed class TestReactSystem : EcsReactSystem {
     }
 
     // Filtered entities processing, will be raised only if entities presents.
-    public override void RunReact (List<int> entities) {
-        foreach (var entity in entities) {
+    public override void RunReact (int[] entities, int count) {
+        for (var i = 0; i < count; i++) {
+            var entity = entities[i];
             var weapon = _world.GetComponent<WeaponComponent> (entity);
             Debug.LogFormat ("Weapon updated on {0}", entity);
         }
@@ -188,9 +190,12 @@ public sealed class TestReactInstantSystem : EcsReactInstantSystem {
     }
 
     // Entity processing, will be raised only when entity will be removed from filter.
-    public override void RunReact (int entity) {
+    public override void RunReact (int entity, object reason) {
+        // not works - component already detached at this moment.
         var weapon = _world.GetComponent<WeaponComponent> (entity);
-        Debug.LogFormat ("Weapon removed from {0}", entity);
+
+        // reason - detached component instance.
+        Debug.LogFormat ("{1} removed from {0}", entity, reason.GetType().Name);
     }
 }
 ```
@@ -220,16 +225,16 @@ public sealed class TestSystem1 : IEcsInitSystem, IEcsFilterListener {
         _weaponFilter.RemoveListener(this);
     }
 
-    void IEcsFilterListener.OnFilterEntityAdded (int entity) {
-        // Entity "entityId" was added to _weaponFilter due to component "WeaponComponent" was added to entity.
+    void IEcsFilterListener.OnFilterEntityAdded (int entity, object reason) {
+        // Entity "entityId" was added to _weaponFilter due to component "reason" with type "WeaponComponent" was added to entity.
     }
 
-    void IEcsFilterListener.OnFilterEntityUpdated(int entityId) {
-        // Component "WeaponComponent" was updated inplace on entity "entityId".
+    void IEcsFilterListener.OnFilterEntityUpdated(int entityId, object reason) {
+        // Component "reason" with type "WeaponComponent" was updated inplace on entity "entityId".
     }
 
-    void IEcsFilterListener.OnFilterEntityRemoved (int entity) {
-        // Entity "entityId" was removed from _weaponFilter due to component "WeaponComponent" was removed from entity.
+    void IEcsFilterListener.OnFilterEntityRemoved (int entity, object reason) {
+        // Entity "entityId" was removed from _weaponFilter due to component "reason" with type "WeaponComponent" was removed from entity.
     }
 }
 ```
@@ -296,7 +301,7 @@ class Startup : Monobehaviour {
 [Snake game](https://github.com/Leopotam/ecs-snake)
 
 # Extensions
-[UnityEditor integration](https://github.com/Leopotam/ecs-unityintegration)
+[Unity integration](https://github.com/Leopotam/ecs-unityintegration)
 
 [uGui event bindings](https://github.com/Leopotam/ecs-ui)
 
@@ -331,7 +336,7 @@ class Startup : Monobehaviour {
 }
 ```
 
-### I want to process one system at `MonoBehaviour.Update` and another - at `MonoBehaviour.FixedUpdate`. How I can do it?
+### I want to process one system at MonoBehaviour.Update() and another - at MonoBehaviour.FixedUpdate(). How I can do it?
 
 For splitting systems by `MonoBehaviour`-method multiple `EcsSystems` logical groups should be used:
 ```

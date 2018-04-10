@@ -8,8 +8,8 @@ using System;
 
 namespace LeopotamGroup.Ecs.Internals {
     interface IEcsComponentPool {
-        object Get (int idx);
-        void Recycle (int id);
+        object GetExistItemById (int idx);
+        void RecycleById (int id);
         int GetComponentTypeIndex ();
     }
 
@@ -37,32 +37,28 @@ namespace LeopotamGroup.Ecs.Internals {
             _typeIndex = EcsHelpers.ComponentsCount++;
         }
 
-        public int GetIndex () {
+        public int RequestNewId () {
             int id;
             if (_reservedItemsCount > 0) {
                 id = _reservedItems[--_reservedItemsCount];
             } else {
                 id = _itemsCount;
                 if (_itemsCount == Items.Length) {
-                    var newItems = new T[_itemsCount << 1];
-                    Array.Copy (Items, 0, newItems, 0, _itemsCount);
-                    Items = newItems;
+                    Array.Resize (ref Items, _itemsCount << 1);
                 }
                 Items[_itemsCount++] = _creator != null ? _creator () : (T) Activator.CreateInstance (typeof (T));
             }
             return id;
         }
 
-        public void Recycle (int id) {
+        public void RecycleById (int id) {
             if (_reservedItemsCount == _reservedItems.Length) {
-                var newItems = new int[_reservedItemsCount << 1];
-                Array.Copy (_reservedItems, 0, newItems, 0, _reservedItemsCount);
-                _reservedItems = newItems;
+                Array.Resize (ref _reservedItems, _reservedItemsCount << 1);
             }
             _reservedItems[_reservedItemsCount++] = id;
         }
 
-        object IEcsComponentPool.Get (int idx) {
+        object IEcsComponentPool.GetExistItemById (int idx) {
             return Items[idx];
         }
 
@@ -77,9 +73,7 @@ namespace LeopotamGroup.Ecs.Internals {
         public void Shrink () {
             var newSize = EcsHelpers.GetPowerOfTwoSize (_itemsCount < MinSize ? MinSize : _itemsCount);
             if (newSize < Items.Length) {
-                var newItems = new T[newSize];
-                Array.Copy (Items, 0, newItems, 0, _itemsCount);
-                Items = newItems;
+                Array.Resize (ref Items, newSize);
             }
             if (_reservedItems.Length > MinSize) {
                 _reservedItems = new int[MinSize];
